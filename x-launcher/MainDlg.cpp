@@ -50,8 +50,9 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	UIAddChildWindowContainer(m_hWnd);
 
-    m_config.Load();
-    m_config.ParseCmdline();
+    m_config.Load();  // from json file
+    m_config.ParseCmdline();  // from command line arguments
+    m_config.SetRunAtStartup(CheckRunAtStartup());  // from registry
 
     m_trayIcon.InstallIcon(m_hWnd, TRAY_ID, hIconSmall, WM_TRAY_ICON, _T("x-launcher by ด๓นท"));
 
@@ -219,4 +220,17 @@ bool CMainDlg::RemoveRunAtStartup()
     ::RegCloseKey(hKey);
 
     return (r == ERROR_SUCCESS);
+}
+
+bool CMainDlg::CheckRunAtStartup()
+{
+    HKEY hKey;
+    if (::RegOpenKeyEx(HKEY_CURRENT_USER, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Run"), 0, KEY_QUERY_VALUE, &hKey) != ERROR_SUCCESS)
+        return false;
+
+    LONG r = ::RegQueryValueEx(hKey, REG_RUNATSTARTUP_KEY_NAME, NULL, NULL, NULL, NULL);
+
+    ::RegCloseKey(hKey);
+
+    return r == ERROR_SUCCESS;
 }

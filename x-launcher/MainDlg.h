@@ -65,6 +65,7 @@ private:
     void StopAllTasks();
     bool SetRunAtStartup();
     bool RemoveRunAtStartup();
+    bool CheckRunAtStartup();
 
 private:
     CTrayIcon m_trayIcon;

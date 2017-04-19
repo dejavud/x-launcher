@@ -10,7 +10,6 @@ using namespace std;
 using json = nlohmann::json;
 
 #define CONFIG_FILE_NAME        "config.json"
-#define CONFIG_RUNATSTARTUP     "runAtStartup"
 #define CONFIG_TASKS            "tasks"
 #define CONFIG_TASK_NAME        "name"
 #define CONFIG_TASK_PATH        "path"
@@ -47,8 +46,6 @@ bool CConfig::Load()
         json j;
         f >> j;
 
-        m_runAtStartup = j.at(CONFIG_RUNATSTARTUP).get<bool>();
-
         auto tasks = j.at(CONFIG_TASKS);
         if (!tasks.is_array())
             return false;
@@ -84,8 +81,6 @@ bool CConfig::Save()
     try
     {
         json j;
-        j[CONFIG_RUNATSTARTUP] = m_runAtStartup;
-
         json tasks;
         for (CTaskList::iterator it = m_taskList.begin(); it != m_taskList.end(); it++) {
             json t;
