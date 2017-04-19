@@ -1,0 +1,17 @@
+{
+    "runAtStartup": false,
+    "tasks": [
+        {
+            "args": "",
+            "dir": "D:/_Temps/nginx-1.11.13/",
+            "name": "nginx",
+            "path": "D:/_Temps/nginx-1.11.13/nginx.exe"
+        },
+        {
+            "args": "-t www.baidu.com",
+            "dir": "C:/Windows/System32/",
+            "name": "ping",
+            "path": "C:/Windows/System32/PING.EXE"
+        }
+    ]
+}
