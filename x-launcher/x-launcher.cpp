@@ -7,6 +7,46 @@
 
 CAppModule _Module;
 
+#define SINGLE_INSTANCE_MUTEX_NAME _T("x-launcher_77D8B6674D89")
+HANDLE g_hMutex = NULL;
+
+bool Init(HINSTANCE hInstance)
+{
+    g_hMutex = ::OpenMutex(MUTEX_ALL_ACCESS, FALSE, SINGLE_INSTANCE_MUTEX_NAME);
+    if (g_hMutex != NULL) {
+        // a instance is already running 
+        return false;
+    }
+    else {
+        g_hMutex = ::CreateMutex(NULL, FALSE, SINGLE_INSTANCE_MUTEX_NAME);
+    }
+
+    HRESULT hRes = ::CoInitialize(NULL);
+    // If you are running on NT 4.0 or higher you can use the following call instead to 
+    // make the EXE free threaded. This means that calls come in on a random RPC thread.
+    //	HRESULT hRes = ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    ATLASSERT(SUCCEEDED(hRes));
+
+    // this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used
+    ::DefWindowProc(NULL, 0, 0, 0L);
+
+    AtlInitCommonControls(ICC_BAR_CLASSES);	// add flags to support other controls
+
+    hRes = _Module.Init(NULL, hInstance);
+    ATLASSERT(SUCCEEDED(hRes));
+
+    return true;
+}
+
+void Final()
+{
+    _Module.Term();
+    ::CoUninitialize();
+
+    ::ReleaseMutex(g_hMutex);
+    g_hMutex = NULL;
+}
+
 int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 {
 	CMessageLoop theLoop;
@@ -30,24 +70,12 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpstrCmdLine, int nCmdShow)
 {
-	HRESULT hRes = ::CoInitialize(NULL);
-// If you are running on NT 4.0 or higher you can use the following call instead to 
-// make the EXE free threaded. This means that calls come in on a random RPC thread.
-//	HRESULT hRes = ::CoInitializeEx(NULL, COINIT_MULTITHREADED);
-	ATLASSERT(SUCCEEDED(hRes));
-
-	// this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used
-	::DefWindowProc(NULL, 0, 0, 0L);
-
-	AtlInitCommonControls(ICC_BAR_CLASSES);	// add flags to support other controls
-
-	hRes = _Module.Init(NULL, hInstance);
-	ATLASSERT(SUCCEEDED(hRes));
+    if (!Init(hInstance))
+        return 1;
 
 	int nRet = Run(lpstrCmdLine, nCmdShow);
 
-	_Module.Term();
-	::CoUninitialize();
+    Final();
 
 	return nRet;
 }
