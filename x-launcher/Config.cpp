@@ -20,25 +20,15 @@ CConfig::CConfig()
 : m_runAtStartup(false)
 , m_autoStart(false)
 {
-    m_configPath = GetConfigPath();
 }
 
 CConfig::~CConfig()
 {
 }
 
-std::string CConfig::GetConfigPath()
-{
-    char path[MAX_PATH] = { 0 };
-    ::GetModuleFileNameA(NULL, path, MAX_PATH);
-    ::PathRemoveFileSpecA(path);
-    ::PathAppendA(path, CONFIG_FILE_NAME);
-    return path;
-}
-
 bool CConfig::Load()
 {
-    ifstream f(m_configPath);
+    ifstream f(CONFIG_FILE_NAME);
     if (!f.is_open())
         return false;
     try
@@ -92,7 +82,7 @@ bool CConfig::Save()
         }
         j[CONFIG_TASKS] = tasks;
 
-        ofstream f(m_configPath);
+        ofstream f(CONFIG_FILE_NAME);
         if (!f.is_open())
             return false;
 

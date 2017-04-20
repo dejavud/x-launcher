@@ -23,10 +23,8 @@ public:
 private:
     CString U8toCS(const char* str, int len = -1);
     std::string CStoU8(LPCTSTR tstr, int len = -1);
-    std::string GetConfigPath();
 
 private:
-    std::string m_configPath;
     bool m_runAtStartup;
     bool m_autoStart;
     CTaskList m_taskList;
