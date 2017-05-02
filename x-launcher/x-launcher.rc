@@ -98,12 +98,12 @@ IDR_MENU MENU
 BEGIN
     POPUP "TRAY"
     BEGIN
-        MENUITEM "Start All",                   ID_TRAY_STARTALL
-        MENUITEM "Stop All",                    ID_TRAY_STOPALL
+        MENUITEM "Start All",                   IDM_TRAY_STARTALL
+        MENUITEM "Stop All",                    IDM_TRAY_STOPALL
         MENUITEM SEPARATOR
-        MENUITEM "Run at Startup",              ID_TRAY_RUNATSTARTUP
+        MENUITEM "Run at Startup",              IDM_TRAY_RUNATSTARTUP
         MENUITEM SEPARATOR
-        MENUITEM "Exit",                        ID_TRAY_EXIT
+        MENUITEM "Exit",                        IDM_TRAY_EXIT
     END
 END
 

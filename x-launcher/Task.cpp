@@ -4,19 +4,19 @@
 
 
 CTask::CTask()
-: m_hProcess(INVALID_HANDLE_VALUE)
+: m_hProcess(NULL)
 {
 
 }
 
 CTask::~CTask()
 {
-    Term();
+    Terminate();
 }
 
 bool CTask::Launch()
 {
-    if (m_hProcess != INVALID_HANDLE_VALUE)
+    if (m_hProcess != NULL)
         return false;
 
     CString cmdline = path;
@@ -29,7 +29,7 @@ bool CTask::Launch()
     si.cb = sizeof(si);
     si.wShowWindow = SW_HIDE;
     PROCESS_INFORMATION pi = { 0 };
-    pi.hProcess = INVALID_HANDLE_VALUE;
+    pi.hProcess = NULL;
     if (!::CreateProcess(NULL, (LPTSTR)(LPCTSTR)cmdline, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, (LPCTSTR)dir, &si, &pi))
     {
         return false;
@@ -37,7 +37,7 @@ bool CTask::Launch()
 
     ::CloseHandle(pi.hThread);
     m_hProcess = pi.hProcess;
-    if (m_hProcess == INVALID_HANDLE_VALUE)
+    if (m_hProcess == NULL)
     {
         return false;
     }
@@ -45,17 +45,15 @@ bool CTask::Launch()
     return true;
 }
 
-void CTask::Term()
+void CTask::Terminate()
 {
-    if (m_hProcess == INVALID_HANDLE_VALUE)
-    {
+    if (m_hProcess == NULL)
         return;
-    }
 
     DWORD pid = GetProcessId(m_hProcess);
     KillProcessTree(pid);
     ::CloseHandle(m_hProcess);
-    m_hProcess = INVALID_HANDLE_VALUE;
+    m_hProcess = NULL;
 }
 
 bool CTask::KillProcessTree(DWORD pid)
@@ -80,4 +78,16 @@ bool CTask::KillProcessTree(DWORD pid)
     ::TerminateProcess(hProcess, 1);
     ::CloseHandle(hProcess);
     return true;   
+}
+
+bool CTask::IsRunning() const
+{
+    if (m_hProcess == NULL)
+        return false;
+
+    DWORD exitCode = 0;
+    if (!::GetExitCodeProcess(m_hProcess, &exitCode))
+        return false;
+
+    return exitCode == STILL_ACTIVE;
 }

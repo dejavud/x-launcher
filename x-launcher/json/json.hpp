@@ -57,6 +57,8 @@ SOFTWARE.
 #include <utility> // declval, forward, make_pair, move, pair, swap
 #include <vector> // vector
 
+#include "fifo_map.hpp"
+
 // exclude unsupported compilers
 #if defined(__clang__)
     #if (__clang_major__ * 10000 + __clang_minor__ * 100 + __clang_patchlevel__) < 30400
@@ -1026,7 +1028,7 @@ Format](http://rfc7159.net/rfc7159)
 @nosubgrouping
 */
 template <
-    template<typename U, typename V, typename... Args> class ObjectType = std::map,
+    template<typename U, typename V, typename... Args> class ObjectType = /*std::map*/nlohmann::fifo_map,
     template<typename U, typename... Args> class ArrayType = std::vector,
     class StringType = std::string,
     class BooleanType = bool,
@@ -1277,7 +1279,7 @@ class basic_json
     */
     using object_t = ObjectType<StringType,
           basic_json,
-          std::less<StringType>,
+          /*std::less<StringType>*/nlohmann::fifo_map_compare<StringType>,
           AllocatorType<std::pair<const StringType,
           basic_json>>>;
 

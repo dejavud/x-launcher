@@ -216,7 +216,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Config.h" />
-    <ClInclude Include="json.hpp" />
+    <ClInclude Include="json\fifo_map.hpp" />
+    <ClInclude Include="json\json.hpp" />
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />

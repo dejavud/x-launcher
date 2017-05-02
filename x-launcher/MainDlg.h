@@ -27,9 +27,6 @@ public:
 	virtual BOOL OnIdle();
 
 	BEGIN_UPDATE_UI_MAP(CMainDlg)
-        UPDATE_ELEMENT(ID_TRAY_STARTALL, UPDUI_MENUPOPUP)
-        UPDATE_ELEMENT(ID_TRAY_STOPALL, UPDUI_MENUPOPUP)
-        UPDATE_ELEMENT(ID_TRAY_RUNATSTARTUP, UPDUI_MENUPOPUP)
 	END_UPDATE_UI_MAP()
 
     BEGIN_MSG_MAP_EX(CMainDlg)
@@ -37,10 +34,11 @@ public:
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
         MESSAGE_HANDLER_EX(WM_CLOSE, OnClose)
         MESSAGE_HANDLER_EX(WM_TRAY_ICON, OnTrayIcon)
-        COMMAND_ID_HANDLER_EX(ID_TRAY_STARTALL, OnStartAll)
-        COMMAND_ID_HANDLER_EX(ID_TRAY_STOPALL, OnStopAll)
-        COMMAND_ID_HANDLER_EX(ID_TRAY_RUNATSTARTUP, OnRunAtStartup)
-        COMMAND_ID_HANDLER_EX(ID_TRAY_EXIT, OnExit)
+        COMMAND_ID_HANDLER_EX(IDM_TRAY_STARTALL, OnStartAll)
+        COMMAND_ID_HANDLER_EX(IDM_TRAY_STOPALL, OnStopAll)
+        COMMAND_ID_HANDLER_EX(IDM_TRAY_RUNATSTARTUP, OnRunAtStartup)
+        COMMAND_ID_HANDLER_EX(IDM_TRAY_EXIT, OnExit)
+        COMMAND_RANGE_HANDLER_EX(IDM_SUB_BEGIN, IDM_SUB_END, OnSubMenuHandler)
         CHAIN_MSG_MAP(CUpdateUI<CMainDlg>)
 	END_MSG_MAP()
 
@@ -57,18 +55,26 @@ public:
     void OnStopAll(UINT uNotifyCode, int nID, CWindow wndCtl);
     void OnRunAtStartup(UINT uNotifyCode, int nID, CWindow wndCtl);
     void OnExit(UINT uNotifyCode, int nID, CWindow wndCtl);
+    void OnSubMenuHandler(UINT uNotifyCode, int nID, CWindow wndCtl);
 
 private:
+    bool InitData();
+    bool InitMenu();
+    bool InitSubMenu(UINT index, CMenuHandle& subMenu);
 	void CloseDialog(int nVal);
     void PrepareMenu(HMENU hMenu);
+    void PrepareSubMenu(CMenuHandle& subMenu, UINT index);
+        
     bool StartAllTasks();
     void StopAllTasks();
+    int StartedTaskNum();
+
     bool SetRunAtStartup();
     bool RemoveRunAtStartup();
-    bool CheckRunAtStartup();
+    bool IsRunAtStartup();
 
 private:
+    CMenu m_menu;
     CTrayIcon m_trayIcon;
     CConfig m_config;
-    BOOL m_isStarted;
 };

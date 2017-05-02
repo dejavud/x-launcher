@@ -13,7 +13,8 @@ public:
     ~CTask();
 
     bool Launch();
-    void Term();
+    void Terminate();
+    bool IsRunning() const;
 
 private:
     bool KillProcessTree(DWORD pid);

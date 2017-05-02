@@ -4,7 +4,7 @@
 
 #undef max
 #undef min
-#include "json.hpp"
+#include "json/json.hpp"
 
 using namespace std;
 using json = nlohmann::json;
@@ -59,7 +59,7 @@ bool CConfig::Load()
      }
     catch (const std::exception& e)
     {
-        const char* estr = e.what();
+        const char* errstr = e.what();
         return false;
     }
 
@@ -88,8 +88,9 @@ bool CConfig::Save()
 
         f << j.dump(4);
     }
-    catch (const std::exception&)
+    catch (const std::exception& e)
     {
+        const char* errstr = e.what();
         return false;
     }
     
