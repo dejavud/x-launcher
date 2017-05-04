@@ -25,28 +25,28 @@ LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 //
 
 IDD_MAINDLG DIALOGEX 0, 0, 187, 98
-STYLE DS_SETFONT | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_CAPTION | WS_SYSMENU
 CAPTION "x-launcher"
-FONT 8, "MS Shell Dlg", 0, 0, 0x0
+FONT 9, "新宋体", 400, 0, 0x86
 BEGIN
 END
 
-IDD_EDITDLG DIALOGEX 0, 0, 251, 141
+IDD_EDITDLG DIALOGEX 0, 0, 253, 139
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-FONT 8, "Tahoma", 400, 0, 0x0
+FONT 9, "新宋体", 400, 0, 0x0
 BEGIN
-    PUSHBUTTON      "Cancel",IDC_BTN_CANCEL,208,117,36,16
-    PUSHBUTTON      "Save",IDC_BTN_SAVE,166,117,36,16
-    LTEXT           "Name:",IDC_STATIC,7,16,40,8
-    EDITTEXT        IDC_EDIT_NAME,47,14,116,13,ES_AUTOHSCROLL
-    LTEXT           "Path:",IDC_STATIC,7,43,40,8
-    EDITTEXT        IDC_EDIT_PATH,47,41,169,13,ES_AUTOHSCROLL
-    PUSHBUTTON      "...",IDC_BTN_PATH,220,40,24,14
-    LTEXT           "Directory:",IDC_STATIC,7,70,40,8
-    EDITTEXT        IDC_EDIT_DIR,47,68,169,13,ES_AUTOHSCROLL
-    PUSHBUTTON      "...",IDC_BTN_DIR,220,67,24,14
-    LTEXT           "Arguments:",IDC_STATIC,7,96,40,8
-    EDITTEXT        IDC_EDIT_ARGS,47,94,195,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "Cancel",IDC_BTN_CANCEL,206,115,40,16
+    PUSHBUTTON      "Save",IDC_BTN_SAVE,159,115,40,16
+    LTEXT           "Name:",IDC_STATIC,7,14,40,8
+    EDITTEXT        IDC_EDIT_NAME,50,12,116,13,ES_AUTOHSCROLL
+    LTEXT           "Path:",IDC_STATIC,7,41,40,8
+    EDITTEXT        IDC_EDIT_PATH,50,39,169,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BTN_PATH,222,38,24,14
+    LTEXT           "Directory:",IDC_STATIC,7,68,40,8
+    EDITTEXT        IDC_EDIT_DIR,50,66,169,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BTN_DIR,222,65,24,14
+    LTEXT           "Arguments:",IDC_STATIC,7,94,40,8
+    EDITTEXT        IDC_EDIT_ARGS,50,92,195,13,ES_AUTOHSCROLL
 END
 
 
@@ -69,9 +69,9 @@ BEGIN
     IDD_EDITDLG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 244
+        RIGHTMARGIN, 246
         TOPMARGIN, 7
-        BOTTOMMARGIN, 134
+        BOTTOMMARGIN, 132
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -97,20 +97,18 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040904b0"
+        BLOCK "080404b0"
         BEGIN
-            VALUE "FileDescription", "x-launcher Module"
             VALUE "FileVersion", "1, 0, 0, 1"
             VALUE "InternalName", "x-launcher"
-            VALUE "LegalCopyright", "Copyright 2017"
             VALUE "OriginalFilename", "x-launcher.exe"
-            VALUE "ProductName", "x-launcher Module"
+            VALUE "ProductName", "x-launcher"
             VALUE "ProductVersion", "1, 0, 0, 1"
         END
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x409, 1200
+        VALUE "Translation", 0x804, 1200
     END
 END
 
@@ -172,84 +170,6 @@ END
 STRINGTABLE
 BEGIN
     IDR_MAINFRAME           "x-launcher"
-END
-
-STRINGTABLE
-BEGIN
-    ID_FILE_NEW             "Create a new document\nNew"
-    ID_FILE_OPEN            "Open an existing document\nOpen"
-    ID_FILE_CLOSE           "Close the active document\nClose"
-    ID_FILE_SAVE            "Save the active document\nSave"
-    ID_FILE_SAVE_AS         "Save the active document with a new name\nSave As"
-    ID_FILE_PAGE_SETUP      "Change the printing options\nPage Setup"
-    ID_FILE_PRINT_SETUP     "Change the printer and printing options\nPrint Setup"
-    ID_FILE_PRINT           "Print the active document\nPrint"
-    ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
-END
-
-STRINGTABLE
-BEGIN
-    ID_APP_ABOUT            "Display program information, version number and copyright\nAbout"
-    ID_APP_EXIT             "Quit the application; prompts to save documents\nExit"
-END
-
-STRINGTABLE
-BEGIN
-    ID_NEXT_PANE            "Switch to the next window pane\nNext Pane"
-    ID_PREV_PANE            "Switch back to the previous window pane\nPrevious Pane"
-END
-
-STRINGTABLE
-BEGIN
-    ID_WINDOW_NEW           "Open another window for the active document\nNew Window"
-    ID_WINDOW_ARRANGE       "Arrange icons at the bottom of the window\nArrange Icons"
-    ID_WINDOW_CASCADE       "Arrange windows so they overlap\nCascade Windows"
-    ID_WINDOW_TILE_HORZ     "Arrange windows as non-overlapping tiles\nTile Windows"
-    ID_WINDOW_TILE_VERT     "Arrange windows as non-overlapping tiles\nTile Windows"
-    ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
-END
-
-STRINGTABLE
-BEGIN
-    ID_EDIT_CLEAR           "Erase the selection\nErase"
-    ID_EDIT_CLEAR_ALL       "Erase everything\nErase All"
-    ID_EDIT_COPY            "Copy the selection and put it on the Clipboard\nCopy"
-    ID_EDIT_CUT             "Cut the selection and put it on the Clipboard\nCut"
-    ID_EDIT_FIND            "Find the specified text\nFind"
-    ID_EDIT_PASTE           "Insert Clipboard contents\nPaste"
-    ID_EDIT_REPEAT          "Repeat the last action\nRepeat"
-    ID_EDIT_REPLACE         "Replace specific text with different text\nReplace"
-    ID_EDIT_SELECT_ALL      "Select the entire document\nSelect All"
-    ID_EDIT_UNDO            "Undo the last action\nUndo"
-    ID_EDIT_REDO            "Redo the previously undone action\nRedo"
-END
-
-STRINGTABLE
-BEGIN
-    ATL_IDS_SCSIZE          "Change the window size"
-    ATL_IDS_SCMOVE          "Change the window position"
-    ATL_IDS_SCMINIMIZE      "Reduce the window to an icon"
-    ATL_IDS_SCMAXIMIZE      "Enlarge the window to full size"
-    ATL_IDS_SCNEXTWINDOW    "Switch to the next document window"
-    ATL_IDS_SCPREVWINDOW    "Switch to the previous document window"
-    ATL_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
-END
-
-STRINGTABLE
-BEGIN
-    ATL_IDS_SCRESTORE       "Restore the window to normal size"
-    ATL_IDS_SCTASKLIST      "Activate Task List"
-    ATL_IDS_MDICHILD        "Activate this window"
-END
-
-STRINGTABLE
-BEGIN
-    ATL_IDS_IDLEMESSAGE     "Ready"
-END
-
-STRINGTABLE
-BEGIN
-    ATL_IDS_MRU_FILE        "Open this document"
 END
 
 #endif    // Chinese (Simplified, PRC) resources
