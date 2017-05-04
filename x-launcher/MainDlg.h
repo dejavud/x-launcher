@@ -39,6 +39,7 @@ public:
         COMMAND_ID_HANDLER_EX(IDM_TRAY_RUNATSTARTUP, OnRunAtStartup)
         COMMAND_ID_HANDLER_EX(IDM_TRAY_EXIT, OnExit)
         COMMAND_RANGE_HANDLER_EX(IDM_SUB_BEGIN, IDM_SUB_END, OnSubMenuHandler)
+        COMMAND_ID_HANDLER_EX(IDM_NEW_TASK, OnNewTask)
         CHAIN_MSG_MAP(CUpdateUI<CMainDlg>)
 	END_MSG_MAP()
 
@@ -56,6 +57,7 @@ public:
     void OnRunAtStartup(UINT uNotifyCode, int nID, CWindow wndCtl);
     void OnExit(UINT uNotifyCode, int nID, CWindow wndCtl);
     void OnSubMenuHandler(UINT uNotifyCode, int nID, CWindow wndCtl);
+    void OnNewTask(UINT uNotifyCode, int nID, CWindow wndCtl);
 
 private:
     bool InitData();

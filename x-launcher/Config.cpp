@@ -46,14 +46,14 @@ bool CConfig::Load()
                 continue;
             string name = it->at(CONFIG_TASK_NAME).get<std::string>();
             string path = it->at(CONFIG_TASK_PATH).get<std::string>();
-            string args = it->at(CONFIG_TASK_ARGS).get<std::string>();
             string dir = it->at(CONFIG_TASK_DIR).get<std::string>();
+            string args = it->at(CONFIG_TASK_ARGS).get<std::string>();
 
             CTask task;
             task.name = U8toCS(name.c_str());
             task.path = U8toCS(path.c_str());
-            task.args = U8toCS(args.c_str());
             task.dir = U8toCS(dir.c_str());
+            task.args = U8toCS(args.c_str());
             m_taskList.push_back(task);
         }
      }
@@ -76,8 +76,8 @@ bool CConfig::Save()
             json t;
             t[CONFIG_TASK_NAME] = CStoU8((LPCTSTR)it->name);
             t[CONFIG_TASK_PATH] = CStoU8((LPCTSTR)it->path);
-            t[CONFIG_TASK_ARGS] = CStoU8((LPCTSTR)it->args);
             t[CONFIG_TASK_DIR] = CStoU8((LPCTSTR)it->dir);
+            t[CONFIG_TASK_ARGS] = CStoU8((LPCTSTR)it->args);
             tasks.push_back(t);
         }
         j[CONFIG_TASKS] = tasks;

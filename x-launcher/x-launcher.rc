@@ -31,6 +31,24 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
 END
 
+IDD_EDITDLG DIALOGEX 0, 0, 255, 141
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 9, "ÐÂËÎÌå", 400, 0, 0x86
+BEGIN
+    PUSHBUTTON      "Cancel",IDC_BTN_CANCEL,211,117,36,16
+    PUSHBUTTON      "Save",IDC_BTN_SAVE,169,117,36,16
+    LTEXT           "Name:",IDC_STATIC,7,16,40,8
+    EDITTEXT        IDC_EDIT_NAME,51,14,116,14,ES_AUTOHSCROLL
+    LTEXT           "Path:",IDC_STATIC,7,43,40,8
+    EDITTEXT        IDC_EDIT_PATH,51,40,169,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BTN_PATH,223,39,24,14
+    LTEXT           "Directory:",IDC_STATIC,7,70,40,8
+    EDITTEXT        IDC_EDIT_DIR,51,66,169,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BTN_DIR,223,65,24,14
+    LTEXT           "Arguments:",IDC_STATIC,7,95,40,8
+    EDITTEXT        IDC_EDIT_ARGS,51,93,195,14,ES_AUTOHSCROLL
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -46,6 +64,14 @@ BEGIN
         RIGHTMARGIN, 180
         TOPMARGIN, 7
         BOTTOMMARGIN, 91
+    END
+
+    IDD_EDITDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 248
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 134
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -101,6 +127,10 @@ BEGIN
         MENUITEM "Start All",                   IDM_TRAY_STARTALL
         MENUITEM "Stop All",                    IDM_TRAY_STOPALL
         MENUITEM SEPARATOR
+        POPUP "Add Task"
+        BEGIN
+            MENUITEM "New",                         IDM_NEW_TASK
+        END
         MENUITEM "Run at Startup",              IDM_TRAY_RUNATSTARTUP
         MENUITEM SEPARATOR
         MENUITEM "Exit",                        IDM_TRAY_EXIT
@@ -124,6 +154,11 @@ IDR_MAINFRAME           ICON                    "res\\x-launcher.ico"
 //
 
 IDD_MAINDLG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_EDITDLG AFX_DIALOG_LAYOUT
 BEGIN
     0
 END

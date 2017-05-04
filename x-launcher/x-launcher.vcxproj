@@ -203,6 +203,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Config.cpp" />
+    <ClCompile Include="EditDlg.cpp" />
     <ClCompile Include="MainDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -216,6 +217,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Config.h" />
+    <ClInclude Include="EditDlg.h" />
     <ClInclude Include="json\fifo_map.hpp" />
     <ClInclude Include="json\json.hpp" />
     <ClInclude Include="MainDlg.h" />

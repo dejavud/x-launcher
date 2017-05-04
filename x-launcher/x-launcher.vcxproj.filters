@@ -36,6 +36,9 @@
     <ClCompile Include="Task.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EditDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -61,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="json\json.hpp">
       <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="EditDlg.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

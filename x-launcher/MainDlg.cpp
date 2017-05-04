@@ -5,13 +5,16 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "MainDlg.h"
+#include "EditDlg.h"
 
 #define TRAY_ID 1000
 #define REG_RUNATSTARTUP_KEY_NAME _T("x-launcher")
 
-#define SUB_MENU_TOTAL_NUM 2
+#define SUB_MENU_TOTAL_NUM 4
 #define SUB_MENU_TYPE_START 0
 #define SUB_MENU_TYPE_STOP 1
+#define SUB_MENU_TYPE_EDIT 2
+#define SUB_MENU_TYPE_DELETE 3
 
 CMainDlg::CMainDlg()
 {
@@ -75,6 +78,9 @@ bool CMainDlg::InitData()
 
 bool CMainDlg::InitMenu()
 {
+    if (!m_menu.IsNull())
+        m_menu.DestroyMenu();
+
     if (!m_menu.LoadMenu(IDR_MENU))
         return false;
 
@@ -122,6 +128,16 @@ bool CMainDlg::InitSubMenu(UINT index, CMenuHandle& subMenu)
     UINT stopMenuID = IDM_SUB_BEGIN + index * SUB_MENU_TOTAL_NUM + SUB_MENU_TYPE_STOP;
     ATLASSERT(stopMenuID < IDM_SUB_END);
     r = subMenu.InsertMenu((UINT)-1, flags, stopMenuID, _T("Stop"));
+    ATLASSERT(r);
+
+    UINT editMenuID = IDM_SUB_BEGIN + index * SUB_MENU_TOTAL_NUM + SUB_MENU_TYPE_EDIT;
+    ATLASSERT(editMenuID < IDM_SUB_END);
+    r = subMenu.InsertMenu((UINT)-1, flags, editMenuID, _T("Edit"));
+    ATLASSERT(r);
+
+    UINT deleteMenuID = IDM_SUB_BEGIN + index * SUB_MENU_TOTAL_NUM + SUB_MENU_TYPE_DELETE;
+    ATLASSERT(deleteMenuID < IDM_SUB_END);
+    r = subMenu.InsertMenu((UINT)-1, flags, deleteMenuID, _T("Delete"));
     ATLASSERT(r);
 
     return true;
@@ -353,5 +369,40 @@ void CMainDlg::OnSubMenuHandler(UINT uNotifyCode, int nID, CWindow wndCtl)
     }
     else if (menuType == SUB_MENU_TYPE_STOP) {
         task.Terminate();
+    }
+    else if (menuType == SUB_MENU_TYPE_EDIT) {
+        CEditDlg dlg(_T("Edit Task"), task);
+        if (dlg.DoModal(m_hWnd) != 0) {
+            m_config.Save();
+
+            InitMenu(); // recreate tray menu
+        }
+    }
+    else if (menuType == SUB_MENU_TYPE_DELETE) {
+        CString infoText;
+        infoText.Format(_T("Are you sure you want to delete task [%s]?"), task.name);
+        if (MessageBox((LPCTSTR)infoText, _T("Delete Task"), MB_YESNO | MB_ICONWARNING) == IDYES) {
+            for (CTaskList::iterator it = taskList.begin(); it != taskList.end(); it++) {
+                if (&task == &*it) {
+                    task.Terminate();
+                    taskList.erase(it);
+                    break;
+                }
+            }
+
+            InitMenu(); // recreate tray menu
+        }
+    }
+}
+
+void CMainDlg::OnNewTask(UINT uNotifyCode, int nID, CWindow wndCtl)
+{
+    CTask newTask;
+    CEditDlg dlg(_T("New Task"), newTask, true);
+    if (dlg.DoModal(m_hWnd) != 0) {
+        m_config.GetTaskList().push_back(newTask);
+        m_config.Save();
+
+        InitMenu(); // recreate tray menu
     }
 }
