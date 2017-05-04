@@ -389,6 +389,7 @@ void CMainDlg::OnSubMenuHandler(UINT uNotifyCode, int nID, CWindow wndCtl)
                     break;
                 }
             }
+            m_config.Save();
 
             InitMenu(); // recreate tray menu
         }
