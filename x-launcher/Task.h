@@ -14,7 +14,7 @@ public:
 
     bool Launch();
     void Terminate();
-    bool IsRunning() const;
+    bool CheckIfRunning();
 
 private:
     bool KillProcessTree(DWORD pid);

@@ -80,7 +80,7 @@ bool CTask::KillProcessTree(DWORD pid)
     return true;   
 }
 
-bool CTask::IsRunning() const
+bool CTask::CheckIfRunning()
 {
     if (m_hProcess == NULL)
         return false;
@@ -89,5 +89,12 @@ bool CTask::IsRunning() const
     if (!::GetExitCodeProcess(m_hProcess, &exitCode))
         return false;
 
-    return exitCode == STILL_ACTIVE;
+    if (exitCode == STILL_ACTIVE) {
+        return true;
+    }
+    else {
+        ::CloseHandle(m_hProcess);
+        m_hProcess = NULL;
+        return false;
+    }
 }

@@ -226,7 +226,7 @@ void CMainDlg::PrepareSubMenu(CMenuHandle& subMenu, UINT index)
 
     UINT startMenuID = IDM_SUB_BEGIN + index * SUB_MENU_TOTAL_NUM + SUB_MENU_TYPE_START;
     UINT stopMenuID = IDM_SUB_BEGIN + index * SUB_MENU_TOTAL_NUM + SUB_MENU_TYPE_STOP;
-    bool isRunning = task.IsRunning();
+    bool isRunning = task.CheckIfRunning();
     subMenu.EnableMenuItem(startMenuID, MF_BYCOMMAND | (isRunning ? MF_DISABLED : MF_ENABLED));
     subMenu.EnableMenuItem(stopMenuID, MF_BYCOMMAND | (isRunning ? MF_ENABLED : MF_DISABLED));
 }
@@ -303,7 +303,7 @@ int CMainDlg::StartedTaskNum()
     CTaskList& taskList = m_config.GetTaskList();
     for (CTaskList::iterator it = taskList.begin(); it != taskList.end(); it++) {
         CTask& task = *it;
-        if (task.IsRunning())
+        if (task.CheckIfRunning())
             num++;
     }
 
