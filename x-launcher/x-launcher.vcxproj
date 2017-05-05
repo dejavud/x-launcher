@@ -227,6 +227,7 @@
     <ClInclude Include="Task.h" />
     <ClInclude Include="TrayIcon.h" />
     <ClInclude Include="TrayMenu.h" />
+    <ClInclude Include="CommonDefs.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="x-launcher.rc" />
