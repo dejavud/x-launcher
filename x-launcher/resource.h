@@ -8,7 +8,6 @@
 #define IDD_EDITDLG                     202
 #define IDB_GRAY_ICON                   207
 #define IDB_GREEN_ICON                  208
-#define IDB_BITMAP1                     209
 #define IDB_RED_ICON                    209
 #define IDC_EDIT_NAME                   1000
 #define IDC_EDIT_PATH                   1001
