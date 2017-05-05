@@ -35,6 +35,8 @@ protected:
     void PrepareMenu(CMenuHandle& menu);
     void PrepareSubMenu(CMenuHandle& subMenu, UINT index, CTask& task);
 
+    int StartedTaskNum();
+
 private:
     CWindow* m_pWnd;
     CConfig& m_config;

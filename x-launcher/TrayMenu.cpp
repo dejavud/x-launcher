@@ -121,7 +121,7 @@ void CTrayMenu::PrepareMenu(CMenuHandle& menu)
 {
     CTaskList& taskList = m_config.GetTaskList();
 
-    int num = StartedTaskNum(taskList);
+    int num = StartedTaskNum();
     menu.EnableMenuItem(IDM_TRAY_STARTALL, MF_BYCOMMAND | ((size_t)num == taskList.size() ? MF_DISABLED : MF_ENABLED));
     menu.EnableMenuItem(IDM_TRAY_STOPALL, MF_BYCOMMAND | (num == 0 ? MF_DISABLED : MF_ENABLED));
     menu.CheckMenuItem(IDM_TRAY_RUNATSTARTUP, MF_BYCOMMAND | (m_config.GetRunAtStartup() ? MF_CHECKED : MF_UNCHECKED));
@@ -198,15 +198,12 @@ void CTrayMenu::OnExit(UINT uNotifyCode, int nID, CWindow wndCtl)
     CMainDlg* pMainDlg = static_cast<CMainDlg*>(m_pWnd);
     ATLASSERT(pMainDlg != NULL);
 
-    if (StartedTaskNum(m_config.GetTaskList()) != 0) {
-        if (m_pWnd->MessageBox(_T("Tasks are running, confirm to exit?"), _T("x-launcher"), MB_YESNO | MB_ICONQUESTION) == IDYES) {
-            pMainDlg->StopAllTasks();
-            m_pWnd->PostMessage(WM_EXIT_FROM_MENU);
-        }
-        else {
+    if (StartedTaskNum() != 0) {
+        if (m_pWnd->MessageBox(_T("Tasks are running, confirm to exit?"), _T("x-launcher"), MB_YESNO | MB_ICONQUESTION) == IDNO)
             return;
-        }
     }
+
+    m_pWnd->PostMessage(WM_EXIT_FROM_MENU);
 }
 
 void CTrayMenu::OnSubMenuHandler(UINT uNotifyCode, int nID, CWindow wndCtl)
@@ -267,4 +264,18 @@ void CTrayMenu::OnNewTask(UINT uNotifyCode, int nID, CWindow wndCtl)
 
         Update();
     }
+}
+
+int CTrayMenu::StartedTaskNum()
+{
+    int num = 0;
+
+    CTaskList& taskList = m_config.GetTaskList();
+    for (CTaskList::iterator it = taskList.begin(); it != taskList.end(); it++) {
+        CTask& task = *it;
+        if (task.CheckIfRunning())
+            num++;
+    }
+
+    return num;
 }

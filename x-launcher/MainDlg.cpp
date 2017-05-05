@@ -71,6 +71,15 @@ void CMainDlg::CloseDialog(int nVal)
 	::PostQuitMessage(nVal);
 }
 
+LRESULT CMainDlg::OnExitFromMenu(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    StopAllTasks();
+
+    int val = (int)wParam;
+    CloseDialog(val);
+    return 0;
+}
+
 bool CMainDlg::StartAllTasks()
 {
     CTaskList& taskList = m_config.GetTaskList();

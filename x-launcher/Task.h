@@ -23,6 +23,3 @@ private:
     HANDLE m_hProcess;
 };
 typedef std::vector<CTask> CTaskList;
-
-
-int StartedTaskNum(CTaskList& taskList);
