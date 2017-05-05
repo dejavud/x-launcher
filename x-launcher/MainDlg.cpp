@@ -6,9 +6,10 @@
 #include "resource.h"
 #include "MainDlg.h"
 
+#define REG_RUNATSTARTUP_KEY_NAME _T("x-launcher")
 
 CMainDlg::CMainDlg()
-: m_trayMenu(this, m_config)
+: m_trayIcon(this, m_config)
 {
 
 }
@@ -29,11 +30,12 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	HICON hIconSmall = AtlLoadIconImage(IDR_MAINFRAME, LR_DEFAULTCOLOR, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON));
 	SetIcon(hIconSmall, FALSE);
 
-
     InitData();
-    m_trayMenu.Create();
 
-    m_trayIcon.InstallIcon(m_hWnd, TRAY_ID, hIconSmall, WM_TRAY_ICON, TRAY_TOOLTIP);
+    if (!m_trayIcon.Install()) {
+        CloseDialog(0);
+        return FALSE;
+    }
 
     if (m_config.GetAutoStart())
         StartAllTasks();
@@ -63,24 +65,10 @@ LRESULT CMainDlg::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void CMainDlg::CloseDialog(int nVal)
 {
-    m_trayIcon.RemoveIcon();
+    m_trayIcon.Remove();
 
 	DestroyWindow();
 	::PostQuitMessage(nVal);
-}
-
-LRESULT CMainDlg::OnTrayIcon(UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-    if (LOWORD(lParam) == WM_RBUTTONUP)
-    {
-        m_trayMenu.Show();
-    }
-    else if (LOWORD(lParam) == WM_LBUTTONDBLCLK)
-    {
-        
-    }
-
-    return 0;
 }
 
 bool CMainDlg::StartAllTasks()

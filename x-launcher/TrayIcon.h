@@ -1,5 +1,8 @@
 #pragma once
 
+#include "TrayMenu.h"
+#include "CommonDefs.h"
+
 class CNotifyIconData : public NOTIFYICONDATA
 {
 public:
@@ -13,15 +16,29 @@ public:
 class CTrayIcon
 {
 public:
-    CTrayIcon();
+    CTrayIcon(CWindow* pWnd, CConfig& config);
     ~CTrayIcon();
 
 public:
-    bool InstallIcon(HWND hwnd, UINT id, HICON icon, UINT message, LPCTSTR toolTip);
-    void RemoveIcon();
+    BEGIN_MSG_MAP_EX(CTrayIcon)
+        MESSAGE_HANDLER_EX(WM_TRAY_ICON, OnTrayIcon)
+        CHAIN_MSG_MAP_MEMBER(m_trayMenu)
+    END_MSG_MAP()
+
+    LRESULT OnTrayIcon(UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+    bool Install();
+    void Remove();
+
+protected:
+    bool InstallTrayIcon(HWND hwnd, UINT id, HICON icon, UINT message, LPCTSTR toolTip);
+    void RemoveTrayIcon();
 
 private:
     bool m_isInstalled;
     CNotifyIconData m_nid;
+
+    CWindow* m_pWnd;
+    CTrayMenu m_trayMenu;
 };
 

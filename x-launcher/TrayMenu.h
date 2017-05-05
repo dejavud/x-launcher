@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Config.h"
+#include "CommonDefs.h"
 
 class CTrayMenu
 {

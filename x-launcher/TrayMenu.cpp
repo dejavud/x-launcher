@@ -3,7 +3,6 @@
 #include "TrayMenu.h"
 #include "MainDlg.h"
 #include "EditDlg.h"
-#include "CommonDefs.h"
 
 CTrayMenu::CTrayMenu(CWindow* pWnd, CConfig& config)
 : m_pWnd(pWnd)

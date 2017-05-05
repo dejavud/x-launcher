@@ -22,8 +22,7 @@ public:
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
         MESSAGE_HANDLER_EX(WM_CLOSE, OnClose)
-        MESSAGE_HANDLER_EX(WM_TRAY_ICON, OnTrayIcon)
-        CHAIN_MSG_MAP_MEMBER(m_trayMenu)
+        CHAIN_MSG_MAP_MEMBER(m_trayIcon)
 	END_MSG_MAP()
 
 // Handler prototypes (uncomment arguments if needed):
@@ -34,7 +33,6 @@ public:
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
     LRESULT OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    LRESULT OnTrayIcon(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     bool StartAllTasks();
     void StopAllTasks();
@@ -50,5 +48,4 @@ private:
 private:
     CConfig m_config;
     CTrayIcon m_trayIcon;
-    CTrayMenu m_trayMenu;
 };

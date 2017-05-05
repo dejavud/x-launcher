@@ -2,11 +2,6 @@
 
 #include <windows.h>
 
-#define TRAY_ID 1000
-#define TRAY_TOOLTIP _T("x-launcher by ด๓นท")
-
-#define REG_RUNATSTARTUP_KEY_NAME _T("x-launcher")
-
 enum WndMessage {
     WM_TRAY_ICON = WM_USER + 1000,
     WM_EXIT_FROM_MENU,
