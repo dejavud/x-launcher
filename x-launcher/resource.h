@@ -6,6 +6,10 @@
 #define IDD_MAINDLG                     129
 #define IDR_MENU                        201
 #define IDD_EDITDLG                     202
+#define IDB_GRAY_ICON                   207
+#define IDB_GREEN_ICON                  208
+#define IDB_BITMAP1                     209
+#define IDB_RED_ICON                    209
 #define IDC_EDIT_NAME                   1000
 #define IDC_EDIT_PATH                   1001
 #define IDC_EDIT_DIR                    1002
@@ -28,7 +32,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        204
+#define _APS_NEXT_RESOURCE_VALUE        210
 #define _APS_NEXT_COMMAND_VALUE         32784
 #define _APS_NEXT_CONTROL_VALUE         1008
 #define _APS_NEXT_SYMED_VALUE           101

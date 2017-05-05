@@ -11,7 +11,11 @@
 #define _WIN32_IE	0x0501
 #define _RICHEDIT_VER	0x0500
 
-#define _WTL_USE_CSTRING  // define _WTL_USE_CSTRING makes atlapp.h forward-declare the CString in atlmisc.h
+//#define _WTL_USE_CSTRING  // define _WTL_USE_CSTRING makes atlapp.h forward-declare the CString in atlmisc.h
+#define _WTL_NO_CSTRING
+#include <atlstr.h>  // use ATL CString instead of WTL CString, otherwise atlimage.h will be confused
+
+#define _WTL_NO_WTYPES   // atlmisc.h will conflict with atlimage.h if without this
 
 #include <atlbase.h>
 #include <atlapp.h>
@@ -27,6 +31,8 @@ extern CAppModule _Module;
 #include <atlmisc.h>
 #include <atlcrack.h>
 #include <atlddx.h>
+
+#include <atlimage.h>
 
 #if defined _M_IX86
   #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")

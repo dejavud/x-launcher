@@ -87,5 +87,14 @@
     <Image Include="res\x-launcher.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\gray_icon.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\green_icon.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\red_icon.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

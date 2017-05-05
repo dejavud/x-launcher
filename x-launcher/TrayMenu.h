@@ -26,7 +26,8 @@ public:
     void OnSubMenuHandler(UINT uNotifyCode, int nID, CWindow wndCtl);
     void OnNewTask(UINT uNotifyCode, int nID, CWindow wndCtl);
 
-    bool Create();
+    bool Init();
+    bool Update();
     void Show();
 
 protected:
@@ -38,4 +39,6 @@ private:
     CWindow* m_pWnd;
     CConfig& m_config;
     CMenu m_menu;
+
+    CImage m_grayIcon, m_redIcon, m_greenIcon;
 };

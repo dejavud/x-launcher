@@ -233,6 +233,9 @@
     <ResourceCompile Include="x-launcher.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\gray_icon.bmp" />
+    <Image Include="res\green_icon.bmp" />
+    <Image Include="res\red_icon.bmp" />
     <Image Include="res\x-launcher.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

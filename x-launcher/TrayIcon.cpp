@@ -22,7 +22,8 @@ bool CTrayIcon::Install()
 {
     ATLASSERT(m_pWnd != NULL && m_pWnd->m_hWnd != NULL);
 
-    m_trayMenu.Create();
+    m_trayMenu.Init();
+    m_trayMenu.Update();
 
     HICON hIconSmall = AtlLoadIconImage(IDR_MAINFRAME, LR_DEFAULTCOLOR, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON));
     return InstallTrayIcon(m_pWnd->m_hWnd, TRAY_ID, hIconSmall, WM_TRAY_ICON, TRAY_TOOLTIP);

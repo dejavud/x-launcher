@@ -164,6 +164,16 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// Bitmap
+//
+
+IDB_GRAY_ICON           BITMAP                  "res\\gray_icon.bmp"
+IDB_GREEN_ICON          BITMAP                  "res\\green_icon.bmp"
+IDB_RED_ICON            BITMAP                  "res\\red_icon.bmp"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 
