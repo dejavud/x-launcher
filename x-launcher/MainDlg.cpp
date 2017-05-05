@@ -17,6 +17,7 @@
 #define SUB_MENU_TYPE_DELETE 3
 
 CMainDlg::CMainDlg()
+: m_trayMenu(m_config)
 {
 
 }
@@ -57,7 +58,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	UIAddChildWindowContainer(m_hWnd);
 
     InitData();
-    InitMenu();
+    m_trayMenu.Create();
 
     m_trayIcon.InstallIcon(m_hWnd, TRAY_ID, hIconSmall, WM_TRAY_ICON, _T("x-launcher by ด๓นท"));
 
@@ -72,73 +73,6 @@ bool CMainDlg::InitData()
     m_config.Load();  // from json file
     m_config.ParseCmdline();  // from command line arguments
     m_config.SetRunAtStartup(IsRunAtStartup());  // from registry
-
-    return true;
-}
-
-bool CMainDlg::InitMenu()
-{
-    if (!m_menu.IsNull())
-        m_menu.DestroyMenu();
-
-    if (!m_menu.LoadMenu(IDR_MENU))
-        return false;
-
-    if (m_config.GetTaskList().empty())
-        return true;
-
-    CMenuHandle trayMenu(m_menu.GetSubMenu(0));
-
-    UINT index = 0;
-    const CTaskList& taskList = m_config.GetTaskList();
-    for (const CTask& task : taskList) {
-        CMenuHandle subMenu;
-        subMenu.CreatePopupMenu();
-        InitSubMenu(index, subMenu);
-
-        MENUITEMINFO mii = { 0 };
-        mii.cbSize = sizeof(MENUITEMINFO);
-        mii.fMask = MIIM_ID | MIIM_STRING | MIIM_SUBMENU;
-        mii.wID = index;
-        mii.hSubMenu = (HMENU)subMenu;
-        mii.dwTypeData = (LPTSTR)(LPCTSTR)task.name;
-        mii.cch = task.name.GetLength();
-        trayMenu.InsertMenuItem(index, TRUE, &mii);
-
-        ++index;
-    }
-
-    if (!trayMenu.InsertMenu(index, MF_BYPOSITION | MF_SEPARATOR))
-        return false;
-
-    return true;
-}
-
-bool CMainDlg::InitSubMenu(UINT index, CMenuHandle& subMenu)
-{
-    ATLASSERT(!subMenu.IsNull());
-
-    UINT flags = MF_BYPOSITION | MF_POPUP | MF_STRING;
-
-    UINT startMenuID = IDM_SUB_BEGIN + index * SUB_MENU_TOTAL_NUM + SUB_MENU_TYPE_START;
-    ATLASSERT(startMenuID < IDM_SUB_END);
-    BOOL r = subMenu.InsertMenu((UINT)-1, flags, startMenuID, _T("Start"));
-    ATLASSERT(r);
-
-    UINT stopMenuID = IDM_SUB_BEGIN + index * SUB_MENU_TOTAL_NUM + SUB_MENU_TYPE_STOP;
-    ATLASSERT(stopMenuID < IDM_SUB_END);
-    r = subMenu.InsertMenu((UINT)-1, flags, stopMenuID, _T("Stop"));
-    ATLASSERT(r);
-
-    UINT editMenuID = IDM_SUB_BEGIN + index * SUB_MENU_TOTAL_NUM + SUB_MENU_TYPE_EDIT;
-    ATLASSERT(editMenuID < IDM_SUB_END);
-    r = subMenu.InsertMenu((UINT)-1, flags, editMenuID, _T("Edit"));
-    ATLASSERT(r);
-
-    UINT deleteMenuID = IDM_SUB_BEGIN + index * SUB_MENU_TOTAL_NUM + SUB_MENU_TYPE_DELETE;
-    ATLASSERT(deleteMenuID < IDM_SUB_END);
-    r = subMenu.InsertMenu((UINT)-1, flags, deleteMenuID, _T("Delete"));
-    ATLASSERT(r);
 
     return true;
 }
@@ -172,17 +106,7 @@ LRESULT CMainDlg::OnTrayIcon(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     if (LOWORD(lParam) == WM_RBUTTONUP)
     {
-        if (m_menu.IsMenu()) {
-            ::SetForegroundWindow(m_hWnd);
-
-            CPoint pos;
-            GetCursorPos(&pos);
-
-            CMenuHandle oPopup(m_menu.GetSubMenu(0));
-            PrepareMenu(oPopup);
-            oPopup.TrackPopupMenu(TPM_LEFTALIGN, pos.x, pos.y, m_hWnd);
-            PostMessage(WM_NULL);
-        }
+        m_trayMenu.Show(m_hWnd);
     }
     else if (LOWORD(lParam) == WM_LBUTTONDBLCLK)
     {
@@ -190,45 +114,6 @@ LRESULT CMainDlg::OnTrayIcon(UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
 
     return 0;
-}
-
-void CMainDlg::PrepareMenu(HMENU hMenu)
-{
-    CMenuHandle trayMenu(hMenu);
-
-    CTaskList& taskList = m_config.GetTaskList();
-
-    int num = StartedTaskNum();
-    trayMenu.EnableMenuItem(IDM_TRAY_STARTALL, MF_BYCOMMAND | ((size_t)num == taskList.size() ? MF_DISABLED : MF_ENABLED));
-    trayMenu.EnableMenuItem(IDM_TRAY_STOPALL, MF_BYCOMMAND | (num == 0 ? MF_DISABLED : MF_ENABLED));
-    trayMenu.CheckMenuItem(IDM_TRAY_RUNATSTARTUP, MF_BYCOMMAND | (m_config.GetRunAtStartup() ? MF_CHECKED : MF_UNCHECKED));
-
-    for (UINT index = 0; index < taskList.size(); index++) {
-        MENUITEMINFO mii = { 0 };
-        mii.cbSize = sizeof(MENUITEMINFO);
-        mii.fMask = MIIM_ID | MIIM_SUBMENU;
-        mii.wID = index;
-        BOOL r = trayMenu.GetMenuItemInfo(index, TRUE, &mii);
-        ATLASSERT(r && mii.hSubMenu != NULL);
-
-        CMenuHandle subMenu(mii.hSubMenu);
-        PrepareSubMenu(subMenu, index);
-    }
-}
-
-void CMainDlg::PrepareSubMenu(CMenuHandle& subMenu, UINT index)
-{
-    ATLASSERT(!subMenu.IsNull());
-
-    CTaskList& taskList = m_config.GetTaskList();
-    ATLASSERT(index < taskList.size());
-    CTask& task = taskList[index];
-
-    UINT startMenuID = IDM_SUB_BEGIN + index * SUB_MENU_TOTAL_NUM + SUB_MENU_TYPE_START;
-    UINT stopMenuID = IDM_SUB_BEGIN + index * SUB_MENU_TOTAL_NUM + SUB_MENU_TYPE_STOP;
-    bool isRunning = task.CheckIfRunning();
-    subMenu.EnableMenuItem(startMenuID, MF_BYCOMMAND | (isRunning ? MF_DISABLED : MF_ENABLED));
-    subMenu.EnableMenuItem(stopMenuID, MF_BYCOMMAND | (isRunning ? MF_ENABLED : MF_DISABLED));
 }
 
 void CMainDlg::OnStartAll(UINT uNotifyCode, int nID, CWindow wndCtl)
@@ -261,7 +146,7 @@ void CMainDlg::OnRunAtStartup(UINT uNotifyCode, int nID, CWindow wndCtl)
 
 void CMainDlg::OnExit(UINT uNotifyCode, int nID, CWindow wndCtl)
 {
-    if (StartedTaskNum() != 0) {
+    if (StartedTaskNum(m_config.GetTaskList()) != 0) {
         if (MessageBox(_T("Tasks are running, confirm to exit?"), _T("x-launcher"), MB_YESNO | MB_ICONQUESTION) == IDYES) {
             StopAllTasks();
         }
@@ -294,20 +179,6 @@ void CMainDlg::StopAllTasks()
         CTask& task = *it;
         task.Terminate();
     }
-}
-
-int CMainDlg::StartedTaskNum()
-{
-    int num = 0;
-
-    CTaskList& taskList = m_config.GetTaskList();
-    for (CTaskList::iterator it = taskList.begin(); it != taskList.end(); it++) {
-        CTask& task = *it;
-        if (task.CheckIfRunning())
-            num++;
-    }
-
-    return num;
 }
 
 bool CMainDlg::SetRunAtStartup()
@@ -375,7 +246,7 @@ void CMainDlg::OnSubMenuHandler(UINT uNotifyCode, int nID, CWindow wndCtl)
         if (dlg.DoModal(m_hWnd) != 0) {
             m_config.Save();
 
-            InitMenu(); // recreate tray menu
+            m_trayMenu.Create(); // recreate tray menu
         }
     }
     else if (menuType == SUB_MENU_TYPE_DELETE) {
@@ -391,7 +262,7 @@ void CMainDlg::OnSubMenuHandler(UINT uNotifyCode, int nID, CWindow wndCtl)
             }
             m_config.Save();
 
-            InitMenu(); // recreate tray menu
+            m_trayMenu.Create(); // recreate tray menu
         }
     }
 }
@@ -404,6 +275,6 @@ void CMainDlg::OnNewTask(UINT uNotifyCode, int nID, CWindow wndCtl)
         m_config.GetTaskList().push_back(newTask);
         m_config.Save();
 
-        InitMenu(); // recreate tray menu
+        m_trayMenu.Create(); // recreate tray menu
     }
 }

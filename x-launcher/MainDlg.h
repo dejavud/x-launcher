@@ -4,8 +4,9 @@
 
 #pragma once
 
-#include "TrayIcon.h"
 #include "Config.h"
+#include "TrayIcon.h"
+#include "TrayMenu.h"
 
 class CMainDlg : 
     public CDialogImpl<CMainDlg>, 
@@ -61,22 +62,17 @@ public:
 
 private:
     bool InitData();
-    bool InitMenu();
-    bool InitSubMenu(UINT index, CMenuHandle& subMenu);
 	void CloseDialog(int nVal);
-    void PrepareMenu(HMENU hMenu);
-    void PrepareSubMenu(CMenuHandle& subMenu, UINT index);
         
     bool StartAllTasks();
     void StopAllTasks();
-    int StartedTaskNum();
 
     bool SetRunAtStartup();
     bool RemoveRunAtStartup();
     bool IsRunAtStartup();
 
 private:
-    CMenu m_menu;
-    CTrayIcon m_trayIcon;
     CConfig m_config;
+    CTrayIcon m_trayIcon;
+    CTrayMenu m_trayMenu;
 };

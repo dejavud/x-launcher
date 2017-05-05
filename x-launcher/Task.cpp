@@ -98,3 +98,16 @@ bool CTask::CheckIfRunning()
         return false;
     }
 }
+
+int StartedTaskNum(CTaskList& taskList)
+{
+    int num = 0;
+
+    for (CTaskList::iterator it = taskList.begin(); it != taskList.end(); it++) {
+        CTask& task = *it;
+        if (task.CheckIfRunning())
+            num++;
+    }
+
+    return num;
+}
