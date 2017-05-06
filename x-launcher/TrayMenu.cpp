@@ -136,6 +136,12 @@ void CTrayMenu::PrepareMenu(CMenuHandle& menu)
 
         CMenuHandle subMenu(mii.hSubMenu);
         PrepareSubMenu(subMenu, index, taskList[index]);
+
+        // update task state color
+        mii.fMask = MIIM_BITMAP;
+        mii.hbmpItem = taskList[index].CheckIfRunning() ? m_greenIcon : m_grayIcon;
+        r = menu.SetMenuItemInfo(index, TRUE, &mii);
+        ATLASSERT(r);
     }
 }
 
@@ -156,8 +162,6 @@ void CTrayMenu::OnStartAll(UINT uNotifyCode, int nID, CWindow wndCtl)
     ATLASSERT(pMainDlg != NULL);
 
     pMainDlg->StartAllTasks();
-
-    Update();
 }
 
 void CTrayMenu::OnStopAll(UINT uNotifyCode, int nID, CWindow wndCtl)
@@ -166,8 +170,6 @@ void CTrayMenu::OnStopAll(UINT uNotifyCode, int nID, CWindow wndCtl)
     ATLASSERT(pMainDlg != NULL);
 
     pMainDlg->StopAllTasks();
-
-    Update();
 }
 
 void CTrayMenu::OnRunAtStartup(UINT uNotifyCode, int nID, CWindow wndCtl)
@@ -220,13 +222,9 @@ void CTrayMenu::OnSubMenuHandler(UINT uNotifyCode, int nID, CWindow wndCtl)
     int menuType = (menuID - IDM_SUB_BEGIN) % SUB_MENU_TOTAL_NUM;
     if (menuType == SUB_MENU_TYPE_START) {
         task.Launch();
-
-        Update();
     }
     else if (menuType == SUB_MENU_TYPE_STOP) {
         task.Terminate();
-
-        Update();
     }
     else if (menuType == SUB_MENU_TYPE_EDIT) {
         CEditDlg dlg(_T("Edit Task"), task);
