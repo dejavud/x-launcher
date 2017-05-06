@@ -189,7 +189,7 @@ void CTrayMenu::OnRunAtStartup(UINT uNotifyCode, int nID, CWindow wndCtl)
         m_config.Save();
 
         CMenuHandle trayMenu(m_menu.GetSubMenu(0));
-        trayMenu.EnableMenuItem(IDM_TRAY_RUNATSTARTUP, MF_BYCOMMAND | (runAtStartup ? MF_ENABLED : MF_DISABLED));
+        trayMenu.EnableMenuItem(IDM_TRAY_RUNATSTARTUP, MF_BYCOMMAND | (runAtStartup ? MF_CHECKED : MF_UNCHECKED));
     }
 }
 
