@@ -83,6 +83,8 @@ void CEditDlg::OnCancel(UINT uNotifyCode, int nID, CWindow wndCtl)
 
 void CEditDlg::OnPathBrowse(UINT uNotifyCode, int nID, CWindow wndCtl)
 {
+    DoDataExchange(TRUE);
+
     CFileDialog dlg(TRUE, _T("exe"), NULL, OFN_FILEMUSTEXIST | OFN_HIDEREADONLY, _T("Executable Files (*.exe)\0*.exe\0All Files (*.*)\0*.*\0"), m_hWnd);
     if (dlg.DoModal() != IDOK)
         return;
@@ -99,6 +101,8 @@ void CEditDlg::OnPathBrowse(UINT uNotifyCode, int nID, CWindow wndCtl)
 
 void CEditDlg::OnDirBrowse(UINT uNotifyCode, int nID, CWindow wndCtl)
 {
+    DoDataExchange(TRUE);
+
     CFolderDialog dlg(m_hWnd, _T("Choose the working directory:"));
     if (dlg.DoModal() != IDOK)
         return;

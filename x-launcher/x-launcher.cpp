@@ -37,10 +37,6 @@ bool Init(HINSTANCE hInstance)
     hRes = _Module.Init(NULL, hInstance);
     ATLASSERT(SUCCEEDED(hRes));
 
-    // set working directory to exe path
-    BOOL r = ::SetCurrentDirectory((LPCTSTR)GetAppDir());
-    ATLASSERT(r);
-
     return true;
 }
 
@@ -84,18 +80,4 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
     Final();
 
 	return nRet;
-}
-
-static CString GetAppDir()
-{
-    CString dir;
-    TCHAR appPath[MAX_PATH];
-    ::GetModuleFileName(NULL, appPath, MAX_PATH);
-    CString tmp = appPath;
-    int index = tmp.ReverseFind(_T('\\'));
-    if (index == -1)
-        index = tmp.ReverseFind(_T('/'));
-    dir = tmp.Left(index);
-
-    return dir;
 }

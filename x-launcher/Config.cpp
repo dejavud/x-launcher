@@ -28,7 +28,7 @@ CConfig::~CConfig()
 
 bool CConfig::Load()
 {
-    ifstream f(CONFIG_FILE_NAME);
+    ifstream f(GetConfigPath());
     if (!f.is_open())
         return false;
     try
@@ -82,7 +82,7 @@ bool CConfig::Save()
         }
         j[CONFIG_TASKS] = tasks;
 
-        ofstream f(CONFIG_FILE_NAME);
+        ofstream f(GetConfigPath());
         if (!f.is_open())
             return false;
 
@@ -195,4 +195,22 @@ void CConfig::ParseCmdline()
             m_autoStart = true;
         }
     }
+}
+
+std::string CConfig::GetConfigPath()
+{
+    std::string path;
+
+    char appPath[MAX_PATH];
+    ::GetModuleFileNameA(NULL, appPath, MAX_PATH);
+    CStringA tmp = appPath;
+    int index = tmp.ReverseFind('\\');
+    if (index == -1)
+        index = tmp.ReverseFind('/');
+    path = tmp.Left(index);
+
+    path += '/';
+    path += CONFIG_FILE_NAME;
+
+    return path;
 }

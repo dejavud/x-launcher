@@ -21,6 +21,7 @@ public:
     bool GetAutoStart() const;
 
 private:
+    std::string GetConfigPath();
     CString U8toCS(const char* str, int len = -1);
     std::string CStoU8(LPCTSTR tstr, int len = -1);
 
