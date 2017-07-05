@@ -2,9 +2,15 @@
 #include "Task.h"
 #include <TlHelp32.h>
 
+#define BUFSIZE 1024
+#define OUTPUT_BUFFER_LIMIT (1024 * 32)
 
 CTask::CTask()
 : m_hProcess(NULL)
+, m_hReadPipe(INVALID_HANDLE_VALUE)
+, m_hWritePipe(INVALID_HANDLE_VALUE)
+, m_readOutputCallback(NULL)
+, m_readOutputCallbackParam(NULL)
 {
 
 }
@@ -25,13 +31,21 @@ bool CTask::Launch()
         cmdline += args;
     }
 
+    if (!CreateOuputPipe(m_hReadPipe, m_hWritePipe))
+        return false;
+
     STARTUPINFO si = { 0 };
-    si.cb = sizeof(si);
-    si.wShowWindow = SW_HIDE;
+    si.cb = sizeof(STARTUPINFO);
+    si.dwFlags = STARTF_USESTDHANDLES/* | STARTF_USESHOWWINDOW*/;
+    //si.wShowWindow = SW_HIDE;
+    si.hStdInput = ::GetStdHandle(STD_INPUT_HANDLE);
+    si.hStdOutput = m_hWritePipe;
+    si.hStdError = m_hWritePipe;
     PROCESS_INFORMATION pi = { 0 };
     pi.hProcess = NULL;
-    if (!::CreateProcess(NULL, (LPTSTR)(LPCTSTR)cmdline, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, (LPCTSTR)dir, &si, &pi))
+    if (!::CreateProcess(NULL, (LPTSTR)(LPCTSTR)cmdline, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, (LPCTSTR)dir, &si, &pi))
     {
+        Cleanup();
         return false;
     }
 
@@ -39,6 +53,7 @@ bool CTask::Launch()
     m_hProcess = pi.hProcess;
     if (m_hProcess == NULL)
     {
+        Cleanup();
         return false;
     }
 
@@ -50,10 +65,35 @@ void CTask::Terminate()
     if (m_hProcess == NULL)
         return;
 
-    DWORD pid = GetProcessId(m_hProcess);
+    DWORD pid = ::GetProcessId(m_hProcess);
     KillProcessTree(pid);
-    ::CloseHandle(m_hProcess);
-    m_hProcess = NULL;
+
+    Cleanup();
+}
+
+bool CTask::CreateOuputPipe(HANDLE& hReadPipe, HANDLE& hWritePipe)
+{
+    if (hReadPipe != INVALID_HANDLE_VALUE) {
+        ::CloseHandle(hReadPipe);
+        hReadPipe = INVALID_HANDLE_VALUE;
+    }
+    if (hWritePipe != INVALID_HANDLE_VALUE) {
+        ::CloseHandle(hWritePipe);
+        hWritePipe = INVALID_HANDLE_VALUE;
+    }
+
+    SECURITY_ATTRIBUTES sa = { 0 };
+    sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+    sa.bInheritHandle = TRUE;
+    sa.lpSecurityDescriptor = NULL;
+
+    if (!::CreatePipe(&hReadPipe, &hWritePipe, &sa, 0))
+        return false;
+
+    if (!::SetHandleInformation(hReadPipe, HANDLE_FLAG_INHERIT, 0))
+        return false;
+
+    return true;
 }
 
 bool CTask::KillProcessTree(DWORD pid)
@@ -93,8 +133,66 @@ bool CTask::CheckIfRunning()
         return true;
     }
     else {
-        ::CloseHandle(m_hProcess);
-        m_hProcess = NULL;
+        Cleanup();
         return false;
     }
+}
+
+void CTask::Cleanup()
+{
+    ::CloseHandle(m_hProcess);
+    m_hProcess = NULL;
+
+    ::CloseHandle(m_hReadPipe);
+    m_hReadPipe = INVALID_HANDLE_VALUE;
+    ::CloseHandle(m_hWritePipe);
+    m_hWritePipe = INVALID_HANDLE_VALUE;
+}
+
+void CTask::ReadOutput()
+{
+    CStringA strA;
+
+    char buf[BUFSIZE] = { 0 };
+    DWORD numRead = 0;
+    DWORD numAvail = 0;
+    do
+    {
+        if (m_hReadPipe == INVALID_HANDLE_VALUE)
+            break;
+
+        if (!PeekNamedPipe(m_hReadPipe, buf, BUFSIZE, &numRead, &numAvail, NULL))
+            break;
+
+        if (numAvail == 0)
+            break;
+
+        if (!::ReadFile(m_hReadPipe, buf, numAvail > BUFSIZE ? BUFSIZE : numAvail, &numRead, NULL))
+            break;
+        strA.Append(buf, numRead);
+
+        numAvail -= numRead;
+    } while (numAvail > 0);
+
+    if (m_totalOutput.GetLength() > OUTPUT_BUFFER_LIMIT)
+        m_totalOutput = m_totalOutput.Right(m_totalOutput.GetLength() - m_totalOutput.ReverseFind(_T('\n'))); // clear buffer
+
+    CString str = CA2T(strA);
+    m_totalOutput += str;
+
+    if (m_readOutputCallback != NULL)
+    {
+        m_readOutputCallback(str, m_readOutputCallbackParam);
+    }
+}
+
+const CString& CTask::GetTotalOutput() const
+{
+    return m_totalOutput;
+}
+
+void CTask::SetReadOutputCallback(ReadOutputCallback cb, UINT_PTR param)
+{
+    m_readOutputCallback = cb;
+    m_readOutputCallbackParam = param;
 }

@@ -12,7 +12,12 @@ enum SubMenuType {
     SUB_MENU_TYPE_STOP,
     SUB_MENU_TYPE_EDIT,
     SUB_MENU_TYPE_DELETE,
+    SUB_MENU_TYPE_SHOW,
 
     // end
     SUB_MENU_TOTAL_NUM,
+};
+
+enum TimerID {
+    TI_PROCESS_TASKS_OUTPUT = 0,
 };

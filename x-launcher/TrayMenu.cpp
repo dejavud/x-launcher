@@ -3,6 +3,7 @@
 #include "TrayMenu.h"
 #include "MainDlg.h"
 #include "EditDlg.h"
+#include "OutputDlg.h"
 
 CTrayMenu::CTrayMenu(CWindow* pWnd, CConfig& config)
 : m_pWnd(pWnd)
@@ -61,6 +62,16 @@ bool CTrayMenu::Update()
         mii.hbmpItem = task.CheckIfRunning() ? m_greenIcon : m_grayIcon;
         trayMenu.InsertMenuItem(index, TRUE, &mii);
 
+        // make that same space is reserved for the check mark and the bitmap
+        // if not, menu item icon would have ugly appearance in xp
+        // ref to: https://stackoverflow.com/questions/30325956/shell-extension-for-explorer-context-menu-icon-breaks-alignment-in-classic-wind
+        MENUINFO mi = { 0 };
+        mi.cbSize = sizeof(mi);
+        mi.fMask = MIM_STYLE;
+        trayMenu.GetMenuInfo(&mi);
+        mi.dwStyle |= MNS_CHECKORBMP;
+        trayMenu.SetMenuInfo(&mi);
+
         ++index;
     }
 
@@ -94,6 +105,14 @@ bool CTrayMenu::InitSubMenu(CMenuHandle& subMenu, UINT index)
     UINT deleteMenuID = IDM_SUB_BEGIN + index * SUB_MENU_TOTAL_NUM + SUB_MENU_TYPE_DELETE;
     ATLASSERT(deleteMenuID < IDM_SUB_END);
     r = subMenu.InsertMenu((UINT)-1, flags, deleteMenuID, _T("Delete"));
+    ATLASSERT(r);
+
+    r = subMenu.InsertMenu((UINT)-1, MF_BYPOSITION | MF_SEPARATOR, (UINT_PTR)0, (LPCTSTR)NULL);
+    ATLASSERT(r);
+
+    UINT showMenuID = IDM_SUB_BEGIN + index * SUB_MENU_TOTAL_NUM + SUB_MENU_TYPE_SHOW;
+    ATLASSERT(showMenuID < IDM_SUB_END);
+    r = subMenu.InsertMenu((UINT)-1, flags, showMenuID, _T("Show"));
     ATLASSERT(r);
 
     return true;
@@ -249,6 +268,10 @@ void CTrayMenu::OnSubMenuHandler(UINT uNotifyCode, int nID, CWindow wndCtl)
 
             Update();
         }
+    }
+    else if (menuType == SUB_MENU_TYPE_SHOW) {
+        COutputDlg dlg(task);
+        dlg.DoModal();
     }
 }
 

@@ -49,6 +49,14 @@ BEGIN
     EDITTEXT        IDC_EDIT_ARGS,50,92,195,13,ES_AUTOHSCROLL
 END
 
+IDD_OUTPUTDLG DIALOGEX 0, 0, 369, 245
+STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "Output"
+FONT 9, "ÐÂËÎÌå", 400, 0, 0x86
+BEGIN
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -72,6 +80,14 @@ BEGIN
         RIGHTMARGIN, 246
         TOPMARGIN, 7
         BOTTOMMARGIN, 132
+    END
+
+    IDD_OUTPUTDLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 362
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 238
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -161,6 +177,11 @@ BEGIN
     0
 END
 
+IDD_OUTPUTDLG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -168,7 +189,9 @@ END
 //
 
 IDB_GRAY_ICON           BITMAP                  "res\\gray_icon.bmp"
+
 IDB_GREEN_ICON          BITMAP                  "res\\green_icon.bmp"
+
 IDB_RED_ICON            BITMAP                  "res\\red_icon.bmp"
 
 

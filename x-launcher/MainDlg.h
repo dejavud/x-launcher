@@ -7,7 +7,6 @@
 #include "Config.h"
 #include "TrayIcon.h"
 #include "TrayMenu.h"
-#include "CommonDefs.h"
 
 class CMainDlg : 
     public CDialogImpl<CMainDlg>
@@ -22,6 +21,7 @@ public:
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
         MESSAGE_HANDLER_EX(WM_CLOSE, OnClose)
+        MESSAGE_HANDLER_EX(WM_TIMER, OnTimer)
         MESSAGE_HANDLER_EX(WM_EXIT_FROM_MENU, OnExitFromMenu)
         CHAIN_MSG_MAP_MEMBER(m_trayIcon)
 	END_MSG_MAP()
@@ -34,6 +34,7 @@ public:
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
     LRESULT OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam);
     LRESULT OnExitFromMenu(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     bool StartAllTasks();
@@ -46,6 +47,8 @@ public:
 private:
     bool InitData();
 	void CloseDialog(int nVal);
+
+    void OnProcessTasksOutput();
 
 private:
     CConfig m_config;

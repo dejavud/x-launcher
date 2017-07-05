@@ -20,6 +20,11 @@ LRESULT CEditDlg::OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     CenterWindow();
 
+    HICON hIcon = AtlLoadIconImage(IDR_MAINFRAME, LR_DEFAULTCOLOR, ::GetSystemMetrics(SM_CXICON), ::GetSystemMetrics(SM_CYICON));
+    SetIcon(hIcon, TRUE);
+    HICON hIconSmall = AtlLoadIconImage(IDR_MAINFRAME, LR_DEFAULTCOLOR, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON));
+    SetIcon(hIconSmall, FALSE);
+
     InitUI();
 
     return TRUE;

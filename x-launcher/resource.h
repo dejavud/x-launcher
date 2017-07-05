@@ -9,6 +9,8 @@
 #define IDB_GRAY_ICON                   207
 #define IDB_GREEN_ICON                  208
 #define IDB_RED_ICON                    209
+#define IDD_OUTPUTDLG                   210
+
 #define IDC_EDIT_NAME                   1000
 #define IDC_EDIT_PATH                   1001
 #define IDC_EDIT_DIR                    1002
@@ -18,6 +20,8 @@
 #define IDC_BTN_ARGV                    1006
 #define IDC_BTN_SAVE                    1007
 #define IDC_BTN_CANCEL                  1008
+#define IDC_EDIT_OUTPUT                 1009
+
 #define IDM_TRAY_STARTALL               32775
 #define IDM_TRAY_STOPALL                32776
 #define IDM_TRAY_EXIT                   32777
@@ -31,9 +35,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        210
+#define _APS_NEXT_RESOURCE_VALUE        212
 #define _APS_NEXT_COMMAND_VALUE         32784
-#define _APS_NEXT_CONTROL_VALUE         1008
+#define _APS_NEXT_CONTROL_VALUE         1012
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

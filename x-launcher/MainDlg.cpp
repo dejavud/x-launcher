@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "MainDlg.h"
+#include "CommonDefs.h"
 
 #define REG_RUNATSTARTUP_KEY_NAME _T("x-launcher")
 
@@ -37,8 +38,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
         return FALSE;
     }
 
-    if (m_config.GetAutoStart())
-        StartAllTasks();
+    SetTimer(TI_PROCESS_TASKS_OUTPUT, 250);  // 250ms
 
 	return TRUE;
 }
@@ -48,6 +48,9 @@ bool CMainDlg::InitData()
     m_config.Load();  // from json file
     m_config.ParseCmdline();  // from command line arguments
     m_config.SetRunAtStartup(IsRunAtStartup());  // from registry
+
+    if (m_config.GetAutoStart())
+        StartAllTasks();
 
     return true;
 }
@@ -65,10 +68,26 @@ LRESULT CMainDlg::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void CMainDlg::CloseDialog(int nVal)
 {
+    KillTimer(TI_PROCESS_TASKS_OUTPUT);
+
     m_trayIcon.Remove();
 
 	DestroyWindow();
 	::PostQuitMessage(nVal);
+}
+
+LRESULT CMainDlg::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (wParam)
+    {
+    case TI_PROCESS_TASKS_OUTPUT:
+        OnProcessTasksOutput();
+        break;
+    default:
+        break;
+    }
+
+    return 0;
 }
 
 LRESULT CMainDlg::OnExitFromMenu(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -86,10 +105,8 @@ bool CMainDlg::StartAllTasks()
     if (taskList.empty())
         return false;
 
-    for (CTaskList::iterator it = taskList.begin(); it != taskList.end(); it++) {
-        CTask& task = *it;
+    for (CTask& task : taskList)
         task.Launch();
-    }
 
     return true;
 }
@@ -97,10 +114,8 @@ bool CMainDlg::StartAllTasks()
 void CMainDlg::StopAllTasks()
 {
     CTaskList& taskList = m_config.GetTaskList();
-    for (CTaskList::iterator it = taskList.begin(); it != taskList.end(); it++) {
-        CTask& task = *it;
+    for (CTask& task : taskList)
         task.Terminate();
-    }
 }
 
 bool CMainDlg::SetRunAtStartup()
@@ -145,4 +160,13 @@ bool CMainDlg::IsRunAtStartup()
     ::RegCloseKey(hKey);
 
     return r == ERROR_SUCCESS;
+}
+
+void CMainDlg::OnProcessTasksOutput()
+{
+    CTaskList& taskList = m_config.GetTaskList();
+    for (CTask& task : taskList) {
+        if (task.CheckIfRunning())
+            task.ReadOutput();
+    }
 }
