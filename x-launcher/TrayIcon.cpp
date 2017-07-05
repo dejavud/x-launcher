@@ -73,3 +73,38 @@ void CTrayIcon::RemoveTrayIcon()
 
     m_isInstalled = false;
 }
+
+bool CTrayIcon::ShowBallon(const CString& info, const CString& title, CTrayBallonStyle style)
+{
+    if (!m_isInstalled)
+        return false;
+
+    m_nid.uFlags |= NIF_INFO;
+    _tcscpy(m_nid.szInfo, info);
+    _tcscpy(m_nid.szInfoTitle, title);
+    switch (style)
+    {
+    case CBS_NONE:
+        m_nid.dwInfoFlags = NIIF_NONE;
+        break;
+    case CBS_INFO:
+        m_nid.dwInfoFlags = NIIF_INFO;
+        break;
+    case CBS_WARNING:
+        m_nid.dwInfoFlags = NIIF_WARNING;
+        break;
+    case CBS_ERROR:
+        m_nid.dwInfoFlags = NIIF_ERROR;
+        break;
+    case CBS_USER:
+        m_nid.dwInfoFlags = NIIF_USER;
+        break;
+    default:
+        m_nid.dwInfoFlags = NIIF_INFO;
+        break;
+    }
+    m_nid.dwInfoFlags |= NIIF_NOSOUND;
+    m_nid.uTimeout = 3000;  // only valid in Windows 2000 and Windows XP
+
+    return ::Shell_NotifyIcon(NIM_MODIFY, &m_nid) == TRUE;
+}

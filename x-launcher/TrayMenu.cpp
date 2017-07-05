@@ -207,7 +207,8 @@ void CTrayMenu::OnRunAtStartup(UINT uNotifyCode, int nID, CWindow wndCtl)
 
     if (result) {
         m_config.SetRunAtStartup(runAtStartup);
-        m_config.Save();
+        if (!m_config.Save())
+            m_pWnd->PostMessage(WM_HANDLE_EXCEPTION, ET_SAVE_FAILURE, 0);
 
         CMenuHandle trayMenu(m_menu.GetSubMenu(0));
         trayMenu.EnableMenuItem(IDM_TRAY_RUNATSTARTUP, MF_BYCOMMAND | (runAtStartup ? MF_CHECKED : MF_UNCHECKED));
@@ -248,7 +249,8 @@ void CTrayMenu::OnSubMenuHandler(UINT uNotifyCode, int nID, CWindow wndCtl)
     else if (menuType == SUB_MENU_TYPE_EDIT) {
         CEditDlg dlg(_T("Edit Task"), task);
         if (dlg.DoModal(m_pWnd->m_hWnd) != 0) {
-            m_config.Save();
+            if (!m_config.Save())
+                m_pWnd->PostMessage(WM_HANDLE_EXCEPTION, ET_SAVE_FAILURE, 0);
 
             Update();
         }
@@ -264,7 +266,9 @@ void CTrayMenu::OnSubMenuHandler(UINT uNotifyCode, int nID, CWindow wndCtl)
                     break;
                 }
             }
-            m_config.Save();
+
+            if (!m_config.Save())
+                m_pWnd->PostMessage(WM_HANDLE_EXCEPTION, ET_SAVE_FAILURE, 0);
 
             Update();
         }
@@ -281,7 +285,9 @@ void CTrayMenu::OnNewTask(UINT uNotifyCode, int nID, CWindow wndCtl)
     CEditDlg dlg(_T("New Task"), newTask, true);
     if (dlg.DoModal(m_pWnd->m_hWnd) != 0) {
         m_config.GetTaskList().push_back(newTask);
-        m_config.Save();
+
+        if (!m_config.Save())
+            m_pWnd->PostMessage(WM_HANDLE_EXCEPTION, ET_SAVE_FAILURE, 0);
 
         Update();
     }

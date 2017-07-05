@@ -3,6 +3,15 @@
 #include "TrayMenu.h"
 #include "CommonDefs.h"
 
+enum CTrayBallonStyle
+{
+    CBS_NONE = 0,
+    CBS_INFO,
+    CBS_WARNING,
+    CBS_ERROR,
+    CBS_USER,
+};
+
 class CNotifyIconData : public NOTIFYICONDATA
 {
 public:
@@ -29,6 +38,8 @@ public:
 
     bool Install();
     void Remove();
+
+    bool ShowBallon(const CString& info, const CString& title, CTrayBallonStyle style);
 
 protected:
     bool InstallTrayIcon(HWND hwnd, UINT id, HICON icon, UINT message, LPCTSTR toolTip);

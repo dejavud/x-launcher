@@ -7,8 +7,8 @@
 
 // Change these values to use different versions
 #define WINVER		0x0500
-#define _WIN32_WINNT	0x0501
-#define _WIN32_IE	0x0501
+#define _WIN32_WINNT	0x0502
+#define _WIN32_IE	0x0502
 #define _RICHEDIT_VER	0x0500
 
 //#define _WTL_USE_CSTRING  // define _WTL_USE_CSTRING makes atlapp.h forward-declare the CString in atlmisc.h

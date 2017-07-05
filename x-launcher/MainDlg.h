@@ -23,6 +23,7 @@ public:
         MESSAGE_HANDLER_EX(WM_CLOSE, OnClose)
         MESSAGE_HANDLER_EX(WM_TIMER, OnTimer)
         MESSAGE_HANDLER_EX(WM_EXIT_FROM_MENU, OnExitFromMenu)
+        MESSAGE_HANDLER_EX(WM_HANDLE_EXCEPTION, OnHandleException)
         CHAIN_MSG_MAP_MEMBER(m_trayIcon)
 	END_MSG_MAP()
 
@@ -36,6 +37,7 @@ public:
     LRESULT OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam);
     LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam);
     LRESULT OnExitFromMenu(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    LRESULT OnHandleException(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     bool StartAllTasks();
     void StopAllTasks();

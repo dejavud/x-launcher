@@ -126,7 +126,6 @@ bool CMainDlg::SetRunAtStartup()
     TCHAR appPath[MAX_PATH];
     ::GetModuleFileName(NULL, appPath, MAX_PATH);
     CString value = appPath;
-    value += " --autostart";
 
     LONG r = ::RegSetValueEx(hKey, REG_RUNATSTARTUP_KEY_NAME, NULL, REG_SZ, (LPBYTE)(LPCTSTR)value, (_tcslen(value) + 1) * sizeof(TCHAR));
 
@@ -185,4 +184,18 @@ void CMainDlg::OnTasksPatrol()
         if (task.CheckIfRunning())
             task.ReadOutput();
     }
+}
+
+LRESULT CMainDlg::OnHandleException(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    switch (wParam)
+    {
+    case ET_SAVE_FAILURE:
+        m_trayIcon.ShowBallon(_T("Failed to save config."), _T("x-launcher"), CBS_USER);
+        break;
+    default:
+        break;
+    }
+
+    return 0;
 }
