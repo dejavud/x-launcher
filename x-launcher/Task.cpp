@@ -6,7 +6,9 @@
 #define OUTPUT_BUFFER_LIMIT (1024 * 32)
 
 CTask::CTask()
-: m_hProcess(NULL)
+: autostart(false)
+, autorestart(false)
+, m_hProcess(NULL)
 , m_hReadPipe(INVALID_HANDLE_VALUE)
 , m_hWritePipe(INVALID_HANDLE_VALUE)
 , m_readOutputCallback(NULL)
@@ -71,6 +73,11 @@ void CTask::Terminate()
     Cleanup();
 }
 
+bool CTask::IsLaunched() const
+{
+    return m_hProcess != NULL;
+}
+
 bool CTask::CreateOuputPipe(HANDLE& hReadPipe, HANDLE& hWritePipe)
 {
     if (hReadPipe != INVALID_HANDLE_VALUE) {
@@ -129,13 +136,10 @@ bool CTask::CheckIfRunning()
     if (!::GetExitCodeProcess(m_hProcess, &exitCode))
         return false;
 
-    if (exitCode == STILL_ACTIVE) {
+    if (exitCode == STILL_ACTIVE)
         return true;
-    }
-    else {
-        Cleanup();
+    else
         return false;
-    }
 }
 
 void CTask::Cleanup()

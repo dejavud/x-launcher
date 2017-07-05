@@ -7,6 +7,8 @@ CEditDlg::CEditDlg(const CString& title, CTask& task, bool isNew)
 : m_title(title)
 , m_task(task)
 , m_isNew(isNew)
+, m_autostartCheck(false)
+, m_autorestartCheck(false)
 {
 
 }
@@ -47,6 +49,8 @@ void CEditDlg::InitUI()
     m_pathText = m_task.path;
     m_dirText = m_task.dir;
     m_argsText = m_task.args;
+    m_autostartCheck = m_task.autostart;
+    m_autorestartCheck = m_task.autorestart;
 
     DoDataExchange(FALSE);
 }
@@ -77,6 +81,8 @@ void CEditDlg::OnSave(UINT uNotifyCode, int nID, CWindow wndCtl)
     m_task.path = m_pathText;
     m_task.dir = m_dirText;
     m_task.args = m_argsText;
+    m_task.autostart = m_autostartCheck;
+    m_task.autorestart = m_autorestartCheck;
 
     CloseDialog(1);
 }

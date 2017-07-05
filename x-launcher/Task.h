@@ -9,6 +9,8 @@ public:
     CString path;
     CString args;
     CString dir;
+    bool autostart;
+    bool autorestart;
 
 public:
     CTask();
@@ -16,6 +18,7 @@ public:
 
     bool Launch();
     void Terminate();
+    bool IsLaunched() const;
     bool CheckIfRunning();
 
     void ReadOutput();

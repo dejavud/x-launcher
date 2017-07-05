@@ -27,6 +27,5 @@ private:
 
 private:
     bool m_runAtStartup;
-    bool m_autoStart;
     CTaskList m_taskList;
 };

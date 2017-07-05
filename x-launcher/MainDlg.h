@@ -48,7 +48,8 @@ private:
     bool InitData();
 	void CloseDialog(int nVal);
 
-    void OnProcessTasksOutput();
+    void AutoStartTasks();
+    void OnTasksPatrol();
 
 private:
     CConfig m_config;

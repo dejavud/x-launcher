@@ -38,7 +38,7 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
         return FALSE;
     }
 
-    SetTimer(TI_PROCESS_TASKS_OUTPUT, 250);  // 250ms
+    SetTimer(TI_TASKS_PATROL, 250);  // every 250ms
 
 	return TRUE;
 }
@@ -49,8 +49,7 @@ bool CMainDlg::InitData()
     m_config.ParseCmdline();  // from command line arguments
     m_config.SetRunAtStartup(IsRunAtStartup());  // from registry
 
-    if (m_config.GetAutoStart())
-        StartAllTasks();
+    AutoStartTasks();
 
     return true;
 }
@@ -68,7 +67,7 @@ LRESULT CMainDlg::OnClose(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void CMainDlg::CloseDialog(int nVal)
 {
-    KillTimer(TI_PROCESS_TASKS_OUTPUT);
+    KillTimer(TI_TASKS_PATROL);
 
     m_trayIcon.Remove();
 
@@ -80,8 +79,8 @@ LRESULT CMainDlg::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (wParam)
     {
-    case TI_PROCESS_TASKS_OUTPUT:
-        OnProcessTasksOutput();
+    case TI_TASKS_PATROL:
+        OnTasksPatrol();
         break;
     default:
         break;
@@ -162,10 +161,27 @@ bool CMainDlg::IsRunAtStartup()
     return r == ERROR_SUCCESS;
 }
 
-void CMainDlg::OnProcessTasksOutput()
+void CMainDlg::AutoStartTasks()
+{
+    CTaskList& taskList = m_config.GetTaskList();
+
+    for (CTask& task : taskList) {
+        if (task.autostart)
+            task.Launch();
+    }
+}
+
+void CMainDlg::OnTasksPatrol()
 {
     CTaskList& taskList = m_config.GetTaskList();
     for (CTask& task : taskList) {
+        if (task.IsLaunched() && !task.CheckIfRunning()) {
+            task.Terminate();
+
+            if (task.autorestart) 
+                task.Launch();
+        }
+
         if (task.CheckIfRunning())
             task.ReadOutput();
     }

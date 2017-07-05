@@ -3,14 +3,18 @@
         {
             "name": "nginx",
             "path": "D:/_Temps/nginx-1.11.13/nginx.exe",
+            "dir": "D:/_Temps/nginx-1.11.13/",
             "args": "",
-            "dir": "D:/_Temps/nginx-1.11.13/"
+            "autostart": false,
+            "autorestart": false
         },
         {
             "name": "ping",
             "path": "C:/Windows/System32/PING.EXE",
+            "dir": "C:/Windows/System32/",
             "args": "-t www.baidu.com",
-            "dir": "C:/Windows/System32/"
+            "autostart": false,
+            "autorestart": false
         }
     ]
 }

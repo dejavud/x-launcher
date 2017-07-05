@@ -15,10 +15,11 @@ using json = nlohmann::json;
 #define CONFIG_TASK_PATH        "path"
 #define CONFIG_TASK_ARGS        "args"
 #define CONFIG_TASK_DIR         "dir"
+#define CONFIG_TASK_AUTOSTART   "autostart"
+#define CONFIG_TASK_AUTORESTART "autorestart"
 
 CConfig::CConfig()
 : m_runAtStartup(false)
-, m_autoStart(false)
 {
 }
 
@@ -48,12 +49,16 @@ bool CConfig::Load()
             string path = it->at(CONFIG_TASK_PATH).get<std::string>();
             string dir = it->at(CONFIG_TASK_DIR).get<std::string>();
             string args = it->at(CONFIG_TASK_ARGS).get<std::string>();
+            bool autostart = it->at(CONFIG_TASK_AUTOSTART).get<bool>();
+            bool autorestart = it->at(CONFIG_TASK_AUTORESTART).get<bool>();
 
             CTask task;
             task.name = U8toCS(name.c_str());
             task.path = U8toCS(path.c_str());
             task.dir = U8toCS(dir.c_str());
             task.args = U8toCS(args.c_str());
+            task.autostart = autostart;
+            task.autorestart = autorestart;
             m_taskList.push_back(task);
         }
      }
@@ -78,6 +83,8 @@ bool CConfig::Save()
             t[CONFIG_TASK_PATH] = CStoU8((LPCTSTR)it->path);
             t[CONFIG_TASK_DIR] = CStoU8((LPCTSTR)it->dir);
             t[CONFIG_TASK_ARGS] = CStoU8((LPCTSTR)it->args);
+            t[CONFIG_TASK_AUTOSTART] = it->autostart;
+            t[CONFIG_TASK_AUTORESTART] = it->autorestart;
             tasks.push_back(t);
         }
         j[CONFIG_TASKS] = tasks;
@@ -110,11 +117,6 @@ void CConfig::SetRunAtStartup(bool runAtStartup)
 CTaskList& CConfig::GetTaskList()
 {
     return m_taskList;
-}
-
-bool CConfig::GetAutoStart() const
-{
-    return m_autoStart;
 }
 
 CString CConfig::U8toCS(const char* str, int len/* = -1*/)
@@ -180,8 +182,6 @@ std::string CConfig::CStoU8(LPCTSTR tstr, int len/* = -1*/)
     return str;
 }
 
-#define ARGV_AUTOSTART  L"--autostart"
-
 void CConfig::ParseCmdline()
 {
     int argc = 0;
@@ -191,9 +191,7 @@ void CConfig::ParseCmdline()
 
     for (int i = 1; i < argc; i++) {
         wstring s = argv[i];
-        if (s.compare(ARGV_AUTOSTART) == 0) {
-            m_autoStart = true;
-        }
+        
     }
 }
 

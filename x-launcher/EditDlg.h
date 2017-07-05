@@ -26,6 +26,8 @@ public:
         DDX_TEXT(IDC_EDIT_PATH, m_pathText)
         DDX_TEXT(IDC_EDIT_DIR, m_dirText)
         DDX_TEXT(IDC_EDIT_ARGS, m_argsText)
+        DDX_CHECK(IDC_CHECK_AUTO_START, m_autostartCheck)
+        DDX_CHECK(IDC_CHECK_AUTO_RESTART, m_autorestartCheck)
     END_DDX_MAP()
 
     LRESULT OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -49,4 +51,6 @@ private:
     CString m_pathText;
     CString m_dirText;
     CString m_argsText;
+    bool m_autostartCheck;
+    bool m_autorestartCheck;
 };

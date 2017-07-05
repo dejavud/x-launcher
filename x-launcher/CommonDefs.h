@@ -19,5 +19,5 @@ enum SubMenuType {
 };
 
 enum TimerID {
-    TI_PROCESS_TASKS_OUTPUT = 0,
+    TI_TASKS_PATROL = 0,
 };
