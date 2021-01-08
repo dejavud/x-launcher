@@ -1,5 +1,5 @@
 ## About
-This utility tool is made for a friend [zhangyangcheng](https://github.com/zhangyangcheng).
+This utility tool is made for my friend [zhangyangcheng](https://github.com/zhangyangcheng).
 
 ## Built With
 - Visual Studio Community 2015
